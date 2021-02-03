@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Books.API.Configuration
+﻿namespace Books.API.Configuration
 {
     public partial class ApplicationConfiguration
     {
@@ -14,7 +8,7 @@ namespace Books.API.Configuration
             ConnectionStrings = new ConnectionStrings();
         }
 
-        public Logging Logging { get;}
+        public Logging Logging { get; }
         public ConnectionStrings ConnectionStrings { get; }
     }
 

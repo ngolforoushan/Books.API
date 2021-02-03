@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Books.API.Entities;
+﻿using Books.API.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Books.API.Contexts
 {
-    public class BooksContext:DbContext
+    public class BooksContext : DbContext
     {
-        private DbSet<Book>? Books { get; set; }
+        public DbSet<Book> Books { get; set; }
 
-        public BooksContext(DbContextOptions<BooksContext> options):base(options)
+        public BooksContext(DbContextOptions<BooksContext> options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,17 +19,20 @@ namespace Books.API.Contexts
                 new Author
                 {
                     Id = Guid.NewGuid(),
-                    FirstName = "Navid", LastName = "Golforoushan"
+                    FirstName = "Navid",
+                    LastName = "Golforoushan"
                 },
                 new Author
                 {
                     Id = Guid.NewGuid(),
-                    FirstName = "Nima", LastName = "Golforoushan"
+                    FirstName = "Nima",
+                    LastName = "Golforoushan"
                 },
                 new Author
                 {
                     Id = Guid.NewGuid(),
-                    FirstName = "Ali", LastName = "Jason"
+                    FirstName = "Ali",
+                    LastName = "Jason"
                 },
                 new Author
                 {

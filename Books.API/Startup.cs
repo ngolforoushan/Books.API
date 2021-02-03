@@ -1,5 +1,6 @@
 using Books.API.Configuration;
 using Books.API.Contexts;
+using Books.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,9 @@ namespace Books.API
             services.AddSingleton(appConfig);
             services.AddDbContext<BooksContext>(
                 o => o.UseSqlServer(appConfig.ConnectionStrings.BooksDbConnectionString));
+            
+            services.AddTransient<IBookRepository,BookRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
