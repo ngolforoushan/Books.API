@@ -29,8 +29,8 @@ namespace Books.API
             services.AddSingleton(appConfig);
             services.AddDbContext<BooksContext>(
                 o => o.UseSqlServer(appConfig.ConnectionStrings.BooksDbConnectionString));
-            
-            services.AddTransient<IBookRepository,BookRepository>();
+
+            services.AddTransient<IBookRepository, BookRepository>();
 
         }
 
