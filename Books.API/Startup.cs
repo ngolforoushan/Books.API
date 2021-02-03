@@ -1,15 +1,11 @@
+using Books.API.Configuration;
+using Books.API.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Books.API
 {
@@ -25,7 +21,13 @@ namespace Books.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            ApplicationConfiguration appConfig = new ApplicationConfiguration();
+            Configuration.Bind(appConfig);
+
             services.AddControllers();
+            services.AddSingleton(appConfig);
+            services.AddDbContext<BooksContext>(
+                o => o.UseSqlServer(appConfig.ConnectionStrings.BooksDbConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
