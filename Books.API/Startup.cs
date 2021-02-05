@@ -1,8 +1,7 @@
 using Books.API.Configuration;
 using Books.API.Contexts;
+using Books.API.Profiles;
 using Books.API.Services;
-using ExpressionDebugger;
-using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq.Expressions;
 
 namespace Books.API
 {
@@ -33,26 +31,15 @@ namespace Books.API
             services.AddSingleton(appConfig);
             services.AddDbContext<BooksContext>(
                 o => o.UseSqlServer(appConfig.ConnectionStrings.BooksDbConnectionString));
-            services.AddSingleton(GetConfiguredMappingConfig());
+            
+            services.AddSingleton(ProfileManager.GetConfiguredMappingConfig());
             services.AddScoped<IMapper, ServiceMapper>();
 
             services.AddTransient<IBookRepository, BookRepository>();
 
         }
 
-        private static TypeAdapterConfig GetConfiguredMappingConfig()
-        {
-            var config = new TypeAdapterConfig
-            {
-                Compiler = exp => exp.CompileWithDebugInfo(new ExpressionCompilationOptions { EmitFile = true, ThrowOnFailedCompilation = true })
-            };
 
-            config.NewConfig<Entities.Book, Models.BookDto>()
-                .Map(
-                    dest => dest.Author,
-                    src => $"{src.Author.FirstName} {src.Author.LastName}");
-            return config;
-        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
