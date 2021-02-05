@@ -19,7 +19,7 @@ namespace Books.API.Services
         public async Task<IEnumerable<Book>> GetBooksAsync()
             => await _context
                 .Books
-                .Include(b=>b.Author)
+                .Include(b => b.Author)
                 .ToListAsync();
 
         public Task<Book> GetBookAsync(Guid id)

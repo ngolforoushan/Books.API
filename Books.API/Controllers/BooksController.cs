@@ -1,7 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Books.API.Services;
+﻿using Books.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+using Books.API.Filters.MappingFilters;
 
 namespace Books.API.Controllers
 {
@@ -17,11 +18,13 @@ namespace Books.API.Controllers
         }
 
         [HttpGet]
+        [BooksResultFilter]
         public async Task<IActionResult> GetBooks()
             => Ok(await _bookRepository.GetBooksAsync());
 
         [HttpGet]
         [Route("{id}")]
+        [BookResultFilter]
         public async Task<IActionResult> GetBooks(Guid id)
             => (await _bookRepository.GetBookAsync(id)) switch
             {

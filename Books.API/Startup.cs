@@ -1,6 +1,7 @@
 using Books.API.Configuration;
 using Books.API.Contexts;
 using Books.API.Services;
+using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ namespace Books.API
             services.AddSingleton(appConfig);
             services.AddDbContext<BooksContext>(
                 o => o.UseSqlServer(appConfig.ConnectionStrings.BooksDbConnectionString));
+            
 
             services.AddTransient<IBookRepository, BookRepository>();
 
@@ -42,6 +44,12 @@ namespace Books.API
                 app.UseDeveloperExceptionPage();
             }
 
+            TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
+            TypeAdapterConfig<Entities.Book, Models.BookDto>
+                .ForType()
+                .Map(
+                    dest => dest.Author,
+                    src => $"{src.Author.FirstName} {src.Author.LastName}");
             app.UseHttpsRedirection();
 
             app.UseRouting();
