@@ -1,7 +1,9 @@
+using System;
 using Books.API.Configuration;
 using Books.API.Contexts;
 using Books.API.Services;
 using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +32,22 @@ namespace Books.API
             services.AddSingleton(appConfig);
             services.AddDbContext<BooksContext>(
                 o => o.UseSqlServer(appConfig.ConnectionStrings.BooksDbConnectionString));
-            
+            services.AddSingleton(GetConfiguredMappingConfig());
+            services.AddScoped<IMapper, ServiceMapper>();
 
             services.AddTransient<IBookRepository, BookRepository>();
 
+        }
+
+        private static TypeAdapterConfig GetConfiguredMappingConfig()
+        {
+            var config = new TypeAdapterConfig();
+
+            config.NewConfig<Entities.Book, Models.BookDto>()
+                .Map(
+                    dest => dest.Author,
+                    src => $"{src.Author.FirstName} {src.Author.LastName}");
+            return config;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,12 +58,7 @@ namespace Books.API
                 app.UseDeveloperExceptionPage();
             }
 
-            TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
-            TypeAdapterConfig<Entities.Book, Models.BookDto>
-                .ForType()
-                .Map(
-                    dest => dest.Author,
-                    src => $"{src.Author.FirstName} {src.Author.LastName}");
+           
             app.UseHttpsRedirection();
 
             app.UseRouting();
