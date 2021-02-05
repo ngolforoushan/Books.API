@@ -1,7 +1,7 @@
-using System;
 using Books.API.Configuration;
 using Books.API.Contexts;
 using Books.API.Services;
+using ExpressionDebugger;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq.Expressions;
 
 namespace Books.API
 {
@@ -41,7 +42,10 @@ namespace Books.API
 
         private static TypeAdapterConfig GetConfiguredMappingConfig()
         {
-            var config = new TypeAdapterConfig();
+            var config = new TypeAdapterConfig
+            {
+                Compiler = exp => exp.CompileWithDebugInfo(new ExpressionCompilationOptions { EmitFile = true, ThrowOnFailedCompilation = true })
+            };
 
             config.NewConfig<Entities.Book, Models.BookDto>()
                 .Map(
@@ -58,7 +62,7 @@ namespace Books.API
                 app.UseDeveloperExceptionPage();
             }
 
-           
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
