@@ -17,12 +17,16 @@ namespace Books.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBooks() 
+        public async Task<IActionResult> GetBooks()
             => Ok(await _bookRepository.GetBooksAsync());
 
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetBooks(Guid id)
-            => Ok(await _bookRepository.GetBookAsync(id));
+            => (await _bookRepository.GetBookAsync(id)) switch
+            {
+                null => NotFound(),
+                { } b => Ok(b)
+            };
     }
 }
