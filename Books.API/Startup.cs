@@ -31,7 +31,7 @@ namespace Books.API
             services.AddSingleton(appConfig);
             services.AddDbContext<BooksContext>(
                 o => o.UseSqlServer(appConfig.ConnectionStrings.BooksDbConnectionString));
-            
+
             services.AddSingleton(ProfileManager.GetConfiguredMappingConfig());
             services.AddScoped<IMapper, ServiceMapper>();
 
